@@ -5,19 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class Pretest extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_unit';
-    protected $table = 'unit';
+    protected $primaryKey = 'id_pretest';
+    protected $table = 'pretest';
+
 
     protected $fillable = [
-        'id_materi',
-        'title',
-        'explanation',
+        'id_level',
+        'score_pretest',
     ];
 
+
     public $timestamps = false;
+
+
 
 }

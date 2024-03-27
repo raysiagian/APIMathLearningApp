@@ -27,14 +27,14 @@ class UnitController extends Controller
     {
         // Validasi input
         $request->validate([
-            'materi_id' => 'required|exists:materi,id',
+            'id_materi' => 'required|exists:materi,id_materi',
             'title' => 'required',
             'explanation' => 'required',
         ]);
 
         // Membuat record baru dalam database
         $unit = Unit::create([
-            'materi_id' => $request->materi_id,
+            'id_materi' => $request->id_materi,
             'title' => $request->title,
             'explanation' => $request->explanation,
         ]);
@@ -67,7 +67,7 @@ class UnitController extends Controller
     {
         // Validasi input
         $request->validate([
-            'materi_id' => 'required|exists:materi,id',
+            'id_materi' => 'required|exists:materi,id_materi',
             'title' => 'required',
             'explanation' => 'required',
         ]);
@@ -77,7 +77,7 @@ class UnitController extends Controller
 
         // Jika unit ditemukan, update data
         if ($unit) {
-            $unit->materi_id = $request->materi_id;
+            $unit->id_materi = $request->id_materi;
             $unit->title = $request->title;
             $unit->explanation = $request->explanation;
 

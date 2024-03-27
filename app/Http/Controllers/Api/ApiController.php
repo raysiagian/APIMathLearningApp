@@ -7,89 +7,99 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ApiController extends Controller
 {
     // Register API
+    public function register(Request $request)
+    {
+        // $user = Auth::user();
 
-    public function register(Request $request){
+        // $token_name = $request->input('token_name', 'api-token');
 
-        $request->validate([
-            "name" => "required",
-            'email' => 'required|string|email|max:255|unique:users,email',
-            "password" => "required|confirmed",
-            "gender" => "required",
-        ]);
+        // $abilities = $request->input('abilities', [
+        //     'order:create',
+        //     'order:view',
+        //     'WLR3:check_availability'
+        // ]);
 
-        User::create([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" => Hash::make($request->password),
-            "gender" => $request->gender,
+        // $token = $user->createToken($token_name, $abilities);
+
+        // return $this->view($user, $request);
+
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => 'required|string|email|max:255|unique:user,email',
+        //     'password' => 'required',
+        //     'gender' => 'required',
+        // ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'gender' => $request->gender,
         ]);
 
         return response()->json([
-            "status" => true,
-            "message" => "Akun berhasil didaftarkan"
+            'status' => true,
+            'message' => 'Akun berhasil didaftarkan',
+            'user' => $user, // Return the created user data
         ]);
-        
     }
 
-    public function login(Request $request){
+    // Login API
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
 
-        $request->validate([
-            "email" => "required|email",
-            "password" => "required"
-        ]);
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('API Token')->plainTextToken;
 
-        $user = User::where("email", $request->email)->first();
-        
-        if(!empty($user)){
-            // user exist
-            if(Hash::check($request->password, $user->password)){
-
-                $token = $user->createToken("tokenSaya")->plainTextToken;
-
-                return response()-> json([
-                    "status"=>true,
-                    "message"=>"Login berhasil",
-                    "token"=>$token,
-                ]);
-            }
-
-            return response()-> json([
-                "status"=>false,
-                "message"=>"Password salah",
+            return response()->json([
+                'status' => true,
+                'message' => 'Login berhasil',
+                'token' => $token,
+                'user' => $user,
             ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email atau kata sandi salah.',
+            ], 401);
         }
-
-        return response()->json([
-            "status"=> false,
-            "message"=> "Akun tidak ditemukan",
-        ]);
-        
     }
 
-    public function profile(){
-
-        $data = auth()->user();
+    // Get user profile API
+    public function profile(Request $request)
+    {
+        $user = $request->user(); // Get authenticated user using middleware
 
         return response()->json([
-            "status"=> true,
-            "message"=>"Profil",
-            "user"=> $data,
+            'status' => true,
+            'message' => 'Profil pengguna',
+            'user' => $user,
         ]);
     }
 
-    public function logout(){
-
-        auth()->user()->tokens()->delete();
+    // Logout API
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            "status"=> true,
-            "message"=>"Logout"
+            'status' => true,
+            'message' => 'Logout berhasil',
         ]);
     }
+
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
+    
 }

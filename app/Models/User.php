@@ -17,6 +17,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 'user';
+    protected $primaryKey = 'id_user';
+    // public $timestamps = false;
+
+
     protected $fillable = [
         'name',
         'email',
@@ -43,4 +49,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public $timestamps = true;
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 }

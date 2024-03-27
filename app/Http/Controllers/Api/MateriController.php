@@ -30,23 +30,29 @@ class MateriController extends Controller
             "title" => "required",
             "imageCard" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
             "imageBackground" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
+            "imageCardAdmin" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
+            "imageStatistic" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         // Mengambil file gambar dari request
         $imageCard = $request->file('imageCard')->store('public/images');
         $imageBackground = $request->file('imageBackground')->store('public/images');
+        $imageCardAdmin = $request->file('imageCardAdmin')->store('public/images');
+        $imageStatistic = $request->file('imageStatistic')->store('public/images');
 
         // Membuat record baru dalam database
         $materi = Materi::create([
             "title" => $request->title,
             "imageCard"=> $imageCard,
             "imageBackground"=> $imageBackground,
+            "imageCardAdmin"=> $imageCardAdmin,
+            "imageStatistic"=> $imageStatistic,
         ]);
 
         // Mengembalikan materi yang baru dibuat sebagai response
         return response()->json(['message' => 'Materi created successfully', 'data' => $materi]);
     }
-
+    
     /**
      * Display the specified resource.
      */
@@ -74,6 +80,8 @@ class MateriController extends Controller
             "title" => "required",
             "imageCard" => "image|mimes:jpeg,png,jpg,gif|max:2048",
             "imageBackground" => "image|mimes:jpeg,png,jpg,gif|max:2048",
+            "imageCardAdmin" => "image|mimes:jpeg,png,jpg,gif|max:2048",
+            "imageStatistic" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         // Mengambil data materi berdasarkan ID
@@ -93,6 +101,17 @@ class MateriController extends Controller
                 $imageBackground = $request->file('imageBackground')->store('public/images');
                 $materi->imageBackground = $imageBackground;
             }
+            
+            if ($request->hasFile('imageCardAdmin')) {
+                $imageCardAdmin = $request->file('imageCardAdmin')->store('public/images');
+                $materi->imageCardAdmin = $imageCardAdmin;
+            }
+
+            if ($request->hasFile('imageStatistic')) {
+                $imageStatistic = $request->file('imageStatistic')->store('public/images');
+                $materi->imageStatistic = $imageStatistic;
+            }
+
 
             // Simpan perubahan
             $materi->save();
