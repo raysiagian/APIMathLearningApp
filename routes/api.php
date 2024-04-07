@@ -28,12 +28,15 @@ use App\Http\Controllers\Api\QuestionPosttestController;
 
 // API Autentikasi 
 Route::post("register", [ApiController::class,"register"]);
+Route::post('check-email-availability', [ApiController::class, 'checkEmailAvailability']);
 Route::post("login", [ApiController::class,"login"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [ApiController::class, 'logout']);
     Route::get('profile', [ApiController::class, 'profile']);
 });
+
+Route::get('getUser', [ApiController::class, 'index']);
 
 // API Materi 
 Route::post("addMateri",[MateriController::class, "store"]);

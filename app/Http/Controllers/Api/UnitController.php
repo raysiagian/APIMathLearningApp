@@ -49,15 +49,10 @@ class UnitController extends Controller
     public function show(string $id)
     {
         // Mengambil data unit berdasarkan ID
-        $unit = Unit::find($id);
+        $unit = Unit::findOrFail($id);
 
-        // Jika unit ditemukan, kembalikan sebagai respons JSON
-        if ($unit) {
-            return response()->json(['data' => $unit]);
-        }
-
-        // Jika unit tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Unit not found'], 404);
+        // Mengembalikan data unit sebagai respons JSON
+        return response()->json(['data' => $unit]);
     }
 
     /**

@@ -50,6 +50,35 @@ class ApiController extends Controller
         ]);
     }
 
+    public function checkEmailAvailability(Request $request)
+    {
+        // Validate request data
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            throw ValidationException::withMessages($validator->errors()->toArray());
+        }
+
+        // Check if email already exists
+        $user = User::where('email', $request->email)->first();
+
+        // Return response based on email availability
+        if ($user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email sudah terdaftar',
+            ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'Email tersedia',
+            ]);
+        }
+    }
+
     // Login API
     public function login(Request $request)
     {
@@ -72,6 +101,16 @@ class ApiController extends Controller
             ], 401);
         }
     }
+
+    public function index()
+    {
+        // Mengambil semua data level
+        $users = User::all();
+
+        // Mengembalikan data level sebagai respons JSON
+        return response()->json(['data' => $users]);
+    }
+
 
     // Get user profile API
     public function profile(Request $request)
