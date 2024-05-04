@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\QuestionPosttest; // Ubah model yang digunakan
+use App\Models\QuestionLevelBonus;
 
-class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
+class QuestionLevelBonusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // Mengambil semua data pertanyaan posttest
-        $questions = QuestionPosttest::all(); // Ubah model yang digunakan
+        // Mengambil semua data pertanyaan pretest
+        $questions = QuestionLevelBonus::all();
 
-        // Mengembalikan data pertanyaan posttest sebagai respons JSON
+        // Mengembalikan data pertanyaan pretest sebagai respons JSON
         return response()->json(['data' => $questions]);
     }
 
@@ -27,18 +27,19 @@ class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
     {
         // Validasi input
         $request->validate([
-            'id_posttest' => 'required|exists:posttest,id_posttest', // Ubah nama field dari id_pretest menjadi id_posttest
+            'id_level_bonus' => 'required|exists:pretest,id_pretest',
             'question' => 'required|string',
             'option_1' => 'required|string',
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
         // Membuat record baru dalam database
-        $question = QuestionPosttest::create($request->all()); // Ubah model yang digunakan
+        $question = QuestionLevelBonus::create($request->all());
 
-        // Mengembalikan pertanyaan posttest yang baru dibuat sebagai respons JSON
+        // Mengembalikan pertanyaan pretest yang baru dibuat sebagai respons JSON
         return response()->json(['message' => 'Question created successfully', 'data' => $question], 201);
     }
 
@@ -47,15 +48,15 @@ class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
      */
     public function show($id)
     {
-        // Mengambil data pertanyaan posttest berdasarkan ID
-        $question = QuestionPosttest::find($id); // Ubah model yang digunakan
+        // Mengambil data pertanyaan pretest berdasarkan ID
+        $question = QuestionLevelBonus::find($id);
 
-        // Jika pertanyaan posttest ditemukan, kembalikan sebagai respons JSON
+        // Jika pertanyaan pretest ditemukan, kembalikan sebagai respons JSON
         if ($question) {
             return response()->json(['data' => $question]);
         }
 
-        // Jika pertanyaan posttest tidak ditemukan, kembalikan pesan error
+        // Jika pertanyaan pretest tidak ditemukan, kembalikan pesan error
         return response()->json(['message' => 'Question not found'], 404);
     }
 
@@ -66,26 +67,27 @@ class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
     {
         // Validasi input
         $request->validate([
-            'id_posttest' => 'required|required|exists:posttest,id_posttest', // Ubah nama field dari id_pretest menjadi id_posttest
+            'id_pretest' => 'required|required|exists:pretest,id_pretest',
             'question' => 'required|string',
             'option_1' => 'required|string',
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
-        // Mengambil data pertanyaan posttest berdasarkan ID
-        $question = QuestionPosttest::find($id); // Ubah model yang digunakan
+        // Mengambil data pertanyaan pretest berdasarkan ID
+        $question = QuestionLevelBonus::find($id);
 
-        // Jika pertanyaan posttest ditemukan, update data
+        // Jika pertanyaan pretest ditemukan, update data
         if ($question) {
             $question->update($request->all());
 
-            // Mengembalikan pertanyaan posttest yang telah diperbarui sebagai respons JSON
+            // Mengembalikan pertanyaan pretest yang telah diperbarui sebagai respons JSON
             return response()->json(['message' => 'Question updated successfully', 'data' => $question]);
         }
 
-        // Jika pertanyaan posttest tidak ditemukan, kembalikan pesan error
+        // Jika pertanyaan pretest tidak ditemukan, kembalikan pesan error
         return response()->json(['message' => 'Question not found'], 404);
     }
 
@@ -94,10 +96,10 @@ class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
      */
     public function destroy($id)
     {
-        // Mengambil data pertanyaan posttest berdasarkan ID
-        $question = QuestionPosttest::find($id); // Ubah model yang digunakan
+        // Mengambil data pertanyaan pretest berdasarkan ID
+        $question = QuestionLevelBonus::find($id);
 
-        // Jika pertanyaan posttest ditemukan, hapus
+        // Jika pertanyaan pretest ditemukan, hapus
         if ($question) {
             $question->delete();
 
@@ -105,7 +107,7 @@ class QuestionPosttestController extends Controller // Ubah nama kelas kontroler
             return response()->json(['message' => 'Question deleted successfully']);
         }
 
-        // Jika pertanyaan posttest tidak ditemukan, kembalikan pesan error
+        // Jika pertanyaan pretest tidak ditemukan, kembalikan pesan error
         return response()->json(['message' => 'Question not found'], 404);
     }
 }

@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuestionPretest extends Model
+class QuestionLevelBonus extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_question_pretest';
-    protected $table = 'question_pretest';
+    protected $primaryKey = 'id_question_level_bonus';
+    protected $table = 'question_level_bonus';
 
     protected $fillable = [
-        'id_pretest',
+        'id_level_bonus',
         'question',
         'option_1',
         'option_2',

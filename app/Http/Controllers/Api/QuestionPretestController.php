@@ -33,6 +33,7 @@ class QuestionPretestController extends Controller
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
         // Membuat record baru dalam database
@@ -72,6 +73,7 @@ class QuestionPretestController extends Controller
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
         // Mengambil data pertanyaan pretest berdasarkan ID

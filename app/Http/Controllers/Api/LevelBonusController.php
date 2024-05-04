@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Pretest;
+use App\Models\LevelBonus;
 
-class PretestController extends Controller
+class LevelBonusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,10 @@ class PretestController extends Controller
     public function index()
     {
         // Mengambil semua data pretest
-        $pretests = Pretest::all();
+        $levelbonuss = LevelBonus::all();
 
         // Mengembalikan data pretest sebagai respons JSON
-        return response()->json(['data' => $pretests]);
+        return response()->json(['data' => $levelbonuss]);
     }
 
     /**
@@ -27,15 +27,16 @@ class PretestController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
-            'score_pretest' => 'nullable|integer',
+            'id_unit_Bonus' => 'required|exists:unit_bonus,id_unit_Bonus',
+            'level_number' => 'required|integer',
+            'score_bonus' => 'nullable|integer',
         ]);
 
         // Membuat record baru dalam database
-        $pretest = Pretest::create($request->all());
+        $levelbonus = LevelBonus::create($request->all());
 
         // Mengembalikan pretest yang baru dibuat sebagai respons JSON
-        return response()->json(['message' => 'Pretest created successfully', 'data' => $pretest], 201);
+        return response()->json(['message' => 'Pretest created successfully', 'data' => $levelbonus], 201);
     }
 
     /**
@@ -44,11 +45,11 @@ class PretestController extends Controller
     public function show($id)
     {
         // Mengambil data pretest berdasarkan ID
-        $pretest = Pretest::find($id);
+        $levelbonus = LevelBonus::find($id);
 
         // Jika pretest ditemukan, kembalikan sebagai respons JSON
-        if ($pretest) {
-            return response()->json(['data' => $pretest]);
+        if ($levelbonus) {
+            return response()->json(['data' => $levelbonus]);
         }
 
         // Jika pretest tidak ditemukan, kembalikan pesan error
@@ -62,19 +63,20 @@ class PretestController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
-            'score_pretest' => 'nullable|integer',
+            'id_unit_Bonus' => 'required|exists:unit_bonus,id_unit_Bonus',
+            'level_number' => 'required|integer',
+            'score_bonus' => 'nullable|integer',
         ]);
 
         // Mengambil data pretest berdasarkan ID
-        $pretest = Pretest::find($id);
+        $levelbonus = LevelBonus::find($id);
 
         // Jika pretest ditemukan, update data
-        if ($pretest) {
-            $pretest->update($request->all());
+        if ($levelbonus) {
+            $levelbonus->update($request->all());
 
             // Mengembalikan pretest yang telah diperbarui sebagai respons JSON
-            return response()->json(['message' => 'Pretest updated successfully', 'data' => $pretest]);
+            return response()->json(['message' => 'Pretest updated successfully', 'data' => $levelbonus]);
         }
 
         // Jika pretest tidak ditemukan, kembalikan pesan error
@@ -87,11 +89,11 @@ class PretestController extends Controller
     public function destroy($id)
     {
         // Mengambil data pretest berdasarkan ID
-        $pretest = Pretest::find($id);
+        $levelbonus = LevelBonus::find($id);
 
         // Jika pretest ditemukan, hapus
-        if ($pretest) {
-            $pretest->delete();
+        if ($levelbonus) {
+            $levelbonus->delete();
 
             // Mengembalikan pesan sukses
             return response()->json(['message' => 'Pretest deleted successfully']);
@@ -110,23 +112,23 @@ public function updateFinalScore(Request $request, $id)
     try {
         // Validasi input
         $request->validate([
-            'score_pretest' => 'required|integer',
+            'score_bonus' => 'required|integer',
         ]);
 
         // Mengambil data pretest berdasarkan ID pretest
-        $pretest = Pretest::find($id);
+        $levelbonus = LevelBonus::find($id);
 
         // Jika pretest ditemukan, update score_pretest
-        if ($pretest) {
-            $pretest->score_pretest = $request->score_pretest;
-            $pretest->save(); // Simpan perubahan ke database
+        if ($levelbonus) {
+            $levelbonus->score_bonus = $request->score_bonus;
+            $levelbonus->save(); // Simpan perubahan ke database
 
             // Mengembalikan pesan sukses
-            return response()->json(['message' => 'Score updated successfully', 'data' => $pretest]);
+            return response()->json(['message' => 'Score updated successfully', 'data' => $levelbonus]);
         }
 
         // Jika pretest tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
+        return response()->json(['message' => 'Level Bonus not found for ID: ' . $id], 404);
     } catch (\Exception $e) {
         // Menangkap dan menampilkan kesalahan
         return response()->json(['error' => $e->getMessage()], 500);

@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Posttest extends Model
+class MaterialVideo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_posttest';
-    protected $table = 'posttest';
+    protected $primaryKey = 'id_material_video';
+    protected $table = 'material_video';
 
 
     protected $fillable = [
-        'id_level',
-        'score_posttest',
+        'video_Url',
+        'title',
+        'explanation',
+        'id_level'
     ];
 
 

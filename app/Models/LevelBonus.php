@@ -5,22 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Posttest extends Model
+class LevelBonus extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_posttest';
-    protected $table = 'posttest';
-
+    protected $primaryKey = 'id_level_bonus';
+    protected $table = 'level_bonus';
 
     protected $fillable = [
-        'id_level',
-        'score_posttest',
+        'id_unit_Bonus',
+        'level_number',
+        'score_bonus',
     ];
 
-
     public $timestamps = false;
-
-
 
 }
