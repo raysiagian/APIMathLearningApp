@@ -56,7 +56,7 @@ class MateriController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         // Mengambil data materi berdasarkan ID
         $materi = Materi::find($id);

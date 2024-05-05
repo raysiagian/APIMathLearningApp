@@ -11,12 +11,23 @@ class LevelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data level
-        $levels = Level::all();
+        // Mendapatkan id_$id_unit dari query parameter
+        $id_unit = $request->query('id_unit');
 
-        // Mengembalikan data level sebagai respons JSON
+        // Membuat query untuk mengambil semua data unit
+        $query = Level::query();
+
+        // Jika id_$id_unit diberikan, filter level berdasarkan id_unit
+        if ($id_unit) {
+            $query->where('id_unit', $id_unit);
+        }
+
+        // Mengambil data unit sesuai dengan query yang telah dibuat
+        $levels = $query->get();
+
+        // Mengembalikan data unit sebagai respons JSON
         return response()->json(['data' => $levels]);
     }
 
@@ -32,7 +43,10 @@ class LevelController extends Controller
         ]);
 
         // Membuat record baru dalam database
-        $level = Level::create($request->all());
+        $level = Level::create([
+            'id_unit' => $request->id_unit,
+            'level_number' => $request->level_number,
+        ]);
 
         // Mengembalikan level yang baru dibuat sebagai respons JSON
         return response()->json(['message' => 'Level created successfully', 'data' => $level], 201);
@@ -41,10 +55,10 @@ class LevelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         // Mengambil data level berdasarkan ID
-        $level = Level::find($id);
+        $level = Level::findOrFail($id);
 
         // Jika level ditemukan, kembalikan sebagai respons JSON
         if ($level) {
@@ -62,7 +76,7 @@ class LevelController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_unit' => 'required|required|exists:unit,id_unit',
+            'id_unit' => 'required|exists:unit,id_unit',
             'level_number' => 'required|integer',
         ]);
 

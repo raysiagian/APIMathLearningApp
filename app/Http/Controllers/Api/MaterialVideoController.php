@@ -11,9 +11,18 @@ class MaterialVideoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $materialvideos = MaterialVideo::all();
+        $id_level = $request->query('id_level');
+
+        $query = MaterialVideo::query();
+
+        if ($id_level) {
+            $query->where('id_level', $id_level);
+        }
+    
+
+        $materialvideos = $query->get();
 
         // Mengembalikan data materialvideos sebagai respons JSON
         return response()->json(['data' => $materialvideos]);
@@ -25,15 +34,18 @@ class MaterialVideoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_level' => 'required|exists:levels,id_level',
+            'id_level' => 'required|exists:level,id_level',
             'video_Url' => 'required|string',
             'title' => 'required|string',
             'explanation' => 'required|string',
-        ], [
-            'id_level.exists' => 'The selected id_level does not exist.',
         ]);
 
-        $materialvideo = MaterialVideo::create($request->all());
+        $materialvideo = MaterialVideo::create([
+            'id_level' => $request->id_level,
+            'video_Url' => $request->video_Url,
+            'title' => $request->title,
+            'explanation' => $request->explanation,
+        ]);
 
         // Mengembalikan materialvideo yang baru dibuat sebagai respons JSON
         return response()->json(['message' => 'Material Video created successfully', 'data' => $materialvideo], 201);
@@ -42,39 +54,38 @@ class MaterialVideoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         $materialvideo = MaterialVideo::find($id);
 
-        // Jika materialvideo ditemukan, kembalikan sebagai respons JSON
-        if ($materialvideo) {
-            return response()->json(['data' => $materialvideo]);
-        }
-
         // Jika materialvideo tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Material Video not found'], 404);
+        return response()->json(['data' => $materialvideo]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MaterialVideo $materialVideo)
+    public function update(Request $request, string $id)
     {
         $request->validate([
-            'id_level' => 'required|exists:levels,id_level',
+            'id_level' => 'required|exists:level,id_level',
             'video_Url' => 'required|string',
             'title' => 'required|string',
             'explanation' => 'required|string',
-        ], [
-            'id_level.exists' => 'The selected id_level does not exist.',
+
         ]);
 
+        $materialvideo = MaterialVideo::find($id);
+
         // Jika materialvideo ditemukan, update data
-        if ($materialVideo) {
-            $materialVideo->update($request->all());
+        if ($materialvideo) {
+            $materialvideo->id_level = $request->id_level;
+            $materialvideo->video_Url = $request->video_Url;
+            $materialvideo->title = $request->title;
+            $materialvideo->explanation = $request->explanation;
 
             // Mengembalikan materialvideo yang telah diperbarui sebagai respons JSON
-            return response()->json(['message' => 'Material Video updated successfully', 'data' => $materialVideo]);
+            return response()->json(['message' => 'Material Video updated successfully', 'data' => $materialvideo]);
         }
 
         // Jika materialvideo tidak ditemukan, kembalikan pesan error

@@ -11,12 +11,22 @@ class PretestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Mengambil semua data pretest
-        $pretests = Pretest::all();
+    public function index(Request $request){
 
-        // Mengembalikan data pretest sebagai respons JSON
+        $id_level = $request->query('id_level');
+
+        // Membuat query untuk mengambil semua data unit
+        $query = Pretest::query();
+    
+        // Jika id_materi diberikan, filter unit berdasarkan id_materi
+        if ($id_level) {
+            $query->where('id_level', $id_level);
+        }
+    
+        // Mengambil data unit sesuai dengan query yang telah dibuat
+        $pretests = $query->get();
+    
+        // Mengembalikan data unit sebagai respons JSON
         return response()->json(['data' => $pretests]);
     }
 
@@ -32,33 +42,31 @@ class PretestController extends Controller
         ]);
 
         // Membuat record baru dalam database
-        $pretest = Pretest::create($request->all());
+        $pretest = Pretest::create([
+            'id_level' => $request->id_level,
+            'score_pretest' => $request->score_pretest,
+        ]);
 
         // Mengembalikan pretest yang baru dibuat sebagai respons JSON
-        return response()->json(['message' => 'Pretest created successfully', 'data' => $pretest], 201);
+        return response()->json(['message' => 'Pretest created successfully', 'data' => $pretest]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         // Mengambil data pretest berdasarkan ID
         $pretest = Pretest::find($id);
 
         // Jika pretest ditemukan, kembalikan sebagai respons JSON
-        if ($pretest) {
-            return response()->json(['data' => $pretest]);
-        }
-
-        // Jika pretest tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Pretest not found'], 404);
+        return response()->json(['data' => $pretest]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         // Validasi input
         $request->validate([
@@ -71,7 +79,11 @@ class PretestController extends Controller
 
         // Jika pretest ditemukan, update data
         if ($pretest) {
-            $pretest->update($request->all());
+            $pretest->id_level = $request->id_level;
+            $pretest->score_pretest = $request->score_pretest;
+            
+
+            $pretest->save();
 
             // Mengembalikan pretest yang telah diperbarui sebagai respons JSON
             return response()->json(['message' => 'Pretest updated successfully', 'data' => $pretest]);

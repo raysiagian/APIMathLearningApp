@@ -11,14 +11,29 @@ class UnitController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    /**
+ * Display a listing of the resource.
+ */
+    public function index(Request $request)
     {
-        // Mengambil semua data unit
-        $units = Unit::all();
+        // Mendapatkan id_materi dari query parameter
+        $id_materi = $request->query('id_materi');
+
+        // Membuat query untuk mengambil semua data unit
+        $query = Unit::query();
+
+        // Jika id_materi diberikan, filter unit berdasarkan id_materi
+        if ($id_materi) {
+            $query->where('id_materi', $id_materi);
+        }
+
+        // Mengambil data unit sesuai dengan query yang telah dibuat
+        $units = $query->get();
 
         // Mengembalikan data unit sebagai respons JSON
         return response()->json(['data' => $units]);
     }
+
 
     /**
      * Store a newly created resource in storage.
