@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pretest;
+use Illuminate\Support\Facades\Auth;
 
 class PretestController extends Controller
 {
@@ -117,33 +118,34 @@ class PretestController extends Controller
     /**
  * Update the score_pretest for the specified pretest.
  */
-public function updateFinalScore(Request $request, $id)
-{
-    try {
-        // Validasi input
-        $request->validate([
-            'score_pretest' => 'required|integer',
-        ]);
+    public function updateFinalScore(Request $request, $id)
+    {
+        try {
+            // Validasi input
+            $request->validate([
+                'score_pretest' => 'required|integer',
+            ]);
 
-        // Mengambil data pretest berdasarkan ID pretest
-        $pretest = Pretest::find($id);
+            // Mengambil data pretest berdasarkan ID pretest
+            $pretest = Pretest::find($id);
 
-        // Jika pretest ditemukan, update score_pretest
-        if ($pretest) {
-            $pretest->score_pretest = $request->score_pretest;
-            $pretest->save(); // Simpan perubahan ke database
+            // Jika pretest ditemukan, update score_pretest
+            if ($pretest) {
+                $pretest->score_pretest = $request->score_pretest;
+                $pretest->save(); // Simpan perubahan ke database
 
-            // Mengembalikan pesan sukses
-            return response()->json(['message' => 'Score updated successfully', 'data' => $pretest]);
+                // Mengembalikan pesan sukses
+                return response()->json(['message' => 'Score updated successfully', 'data' => $pretest]);
+            }
+
+            // Jika pretest tidak ditemukan, kembalikan pesan error
+            return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
+        } catch (\Exception $e) {
+            // Menangkap dan menampilkan kesalahan
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // Jika pretest tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
-    } catch (\Exception $e) {
-        // Menangkap dan menampilkan kesalahan
-        return response()->json(['error' => $e->getMessage()], 500);
     }
-}
+    
 
 }
 
