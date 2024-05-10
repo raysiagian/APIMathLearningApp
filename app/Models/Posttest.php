@@ -14,7 +14,7 @@ class Posttest extends Model
 
 
     protected $fillable = [
-        'id_level',
+        'id_unit',
         'score_posttest',
     ];
 

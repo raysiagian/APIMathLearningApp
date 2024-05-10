@@ -13,12 +13,12 @@ class MaterialVideoController extends Controller
      */
     public function index(Request $request)
     {
-        $id_level = $request->query('id_level');
+        $id_unit = $request->query('id_unit');
 
         $query = MaterialVideo::query();
 
-        if ($id_level) {
-            $query->where('id_level', $id_level);
+        if ($id_unit) {
+            $query->where('id_unit', $id_unit);
         }
     
 
@@ -34,14 +34,14 @@ class MaterialVideoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'video_Url' => 'required|string',
             'title' => 'required|string',
             'explanation' => 'required|string',
         ]);
 
         $materialvideo = MaterialVideo::create([
-            'id_level' => $request->id_level,
+            'id_unit' => $request->id_unit,
             'video_Url' => $request->video_Url,
             'title' => $request->title,
             'explanation' => $request->explanation,
@@ -68,7 +68,7 @@ class MaterialVideoController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'video_Url' => 'required|string',
             'title' => 'required|string',
             'explanation' => 'required|string',
@@ -79,7 +79,7 @@ class MaterialVideoController extends Controller
 
         // Jika materialvideo ditemukan, update data
         if ($materialvideo) {
-            $materialvideo->id_level = $request->id_level;
+            $materialvideo->id_unit = $request->id_unit;
             $materialvideo->video_Url = $request->video_Url;
             $materialvideo->title = $request->title;
             $materialvideo->explanation = $request->explanation;

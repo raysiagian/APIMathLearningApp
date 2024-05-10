@@ -9,11 +9,11 @@ class MaterialVideo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_material_videp';
+    protected $primaryKey = 'id_material_video';
     protected $table = 'material_video';
 
     protected $fillable = [
-        'id_level',
+        'id_unit',
         'video_Url',
         'title',
         'explanation',

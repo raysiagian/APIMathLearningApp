@@ -27,7 +27,7 @@ class PosttestController extends Controller // Mengubah nama kelas kontroler
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'score_posttest' => 'nullable|integer', // Mengubah nama field dari score_pretest menjadi score_posttest
         ]);
 
@@ -62,7 +62,7 @@ class PosttestController extends Controller // Mengubah nama kelas kontroler
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'score_posttest' => 'nullable|integer', // Mengubah nama field dari score_pretest menjadi score_posttest
         ]);
 

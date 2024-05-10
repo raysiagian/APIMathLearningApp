@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pretest;
-use Illuminate\Support\Facades\Auth;
 
 class PretestController extends Controller
 {
@@ -14,14 +13,14 @@ class PretestController extends Controller
      */
     public function index(Request $request){
 
-        $id_level = $request->query('id_level');
+        $id_unit = $request->query('id_unit');
 
         // Membuat query untuk mengambil semua data unit
         $query = Pretest::query();
     
         // Jika id_materi diberikan, filter unit berdasarkan id_materi
-        if ($id_level) {
-            $query->where('id_level', $id_level);
+        if ($id_unit) {
+            $query->where('id_unit', $id_unit);
         }
     
         // Mengambil data unit sesuai dengan query yang telah dibuat
@@ -38,13 +37,13 @@ class PretestController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'score_pretest' => 'nullable|integer',
         ]);
 
         // Membuat record baru dalam database
         $pretest = Pretest::create([
-            'id_level' => $request->id_level,
+            'id_unit' => $request->id_unit,
             'score_pretest' => $request->score_pretest,
         ]);
 
@@ -71,7 +70,7 @@ class PretestController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_level' => 'required|exists:level,id_level',
+            'id_unit' => 'required|exists:unit,id_unit',
             'score_pretest' => 'nullable|integer',
         ]);
 
@@ -80,7 +79,7 @@ class PretestController extends Controller
 
         // Jika pretest ditemukan, update data
         if ($pretest) {
-            $pretest->id_level = $request->id_level;
+            $pretest->id_unit = $request->id_unit;
             $pretest->score_pretest = $request->score_pretest;
             
 
@@ -118,34 +117,33 @@ class PretestController extends Controller
     /**
  * Update the score_pretest for the specified pretest.
  */
-    public function updateFinalScore(Request $request, $id)
-    {
-        try {
-            // Validasi input
-            $request->validate([
-                'score_pretest' => 'required|integer',
-            ]);
+public function updateFinalScore(Request $request, $id)
+{
+    try {
+        // Validasi input
+        $request->validate([
+            'score_pretest' => 'required|integer',
+        ]);
 
-            // Mengambil data pretest berdasarkan ID pretest
-            $pretest = Pretest::find($id);
+        // Mengambil data pretest berdasarkan ID pretest
+        $pretest = Pretest::find($id);
 
-            // Jika pretest ditemukan, update score_pretest
-            if ($pretest) {
-                $pretest->score_pretest = $request->score_pretest;
-                $pretest->save(); // Simpan perubahan ke database
+        // Jika pretest ditemukan, update score_pretest
+        if ($pretest) {
+            $pretest->score_pretest = $request->score_pretest;
+            $pretest->save(); // Simpan perubahan ke database
 
-                // Mengembalikan pesan sukses
-                return response()->json(['message' => 'Score updated successfully', 'data' => $pretest]);
-            }
-
-            // Jika pretest tidak ditemukan, kembalikan pesan error
-            return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
-        } catch (\Exception $e) {
-            // Menangkap dan menampilkan kesalahan
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Mengembalikan pesan sukses
+            return response()->json(['message' => 'Score updated successfully', 'data' => $pretest]);
         }
+
+        // Jika pretest tidak ditemukan, kembalikan pesan error
+        return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
+    } catch (\Exception $e) {
+        // Menangkap dan menampilkan kesalahan
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-    
+}
 
 }
 
