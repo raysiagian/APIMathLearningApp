@@ -4,36 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Unit;
+use App\Models\UnitBonus;
 
-class UnitController extends Controller
+class UnitBonusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
     /**
  * Display a listing of the resource.
  */
-    public function index(Request $request)
-    {
-        // Mendapatkan id_materi dari query parameter
-        $id_materi = $request->query('id_materi');
+public function index(Request $request)
+{
+    // Mendapatkan id_materi dari query parameter
+    $id_materi = $request->query('id_materi');
 
-        // Membuat query untuk mengambil semua data unit
-        $query = Unit::query();
+    // Membuat query untuk mengambil semua data unit
+    $query = UnitBonus::query();
 
-        // Jika id_materi diberikan, filter unit berdasarkan id_materi
-        if ($id_materi) {
-            $query->where('id_materi', $id_materi);
-        }
-
-        // Mengambil data unit sesuai dengan query yang telah dibuat
-        $units = $query->get();
-
-        // Mengembalikan data unit sebagai respons JSON
-        return response()->json(['data' => $units]);
+    // Jika id_materi diberikan, filter unit berdasarkan id_materi
+    if ($id_materi) {
+        $query->where('id_materi', $id_materi);
     }
+
+    // Mengambil data unit sesuai dengan query yang telah dibuat
+    $units = $query->get();
+
+    // Mengembalikan data unit sebagai respons JSON
+    return response()->json(['data' => $units]);
+}
 
 
     /**
@@ -49,7 +48,7 @@ class UnitController extends Controller
         ]);
 
         // Membuat record baru dalam database
-        $unit = Unit::create([
+        $unit = UnitBonus::create([
             'id_materi' => $request->id_materi,
             'title' => $request->title,
             'explanation' => $request->explanation,
@@ -65,7 +64,7 @@ class UnitController extends Controller
     public function show(string $id)
     {
         // Mengambil data unit berdasarkan ID
-        $unit = Unit::findOrFail($id);
+        $unit = UnitBonus::findOrFail($id);
 
         // Mengembalikan data unit sebagai respons JSON
         return response()->json(['data' => $unit]);
@@ -84,7 +83,7 @@ class UnitController extends Controller
         ]);
 
         // Mengambil data unit berdasarkan ID
-        $unit = Unit::find($id);
+        $unit = UnitBonus::find($id);
 
         // Jika unit ditemukan, update data
         if ($unit) {
@@ -109,7 +108,7 @@ class UnitController extends Controller
     public function destroy(string $id)
     {
         // Mengambil data unit berdasarkan ID
-        $unit = Unit::find($id);
+        $unit = UnitBonus::find($id);
 
         // Jika unit ditemukan, hapus
         if ($unit) {

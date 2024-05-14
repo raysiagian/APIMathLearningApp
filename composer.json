@@ -1,13 +1,22 @@
 {
     "name": "laravel/laravel",
     "type": "project",
+<<<<<<< HEAD
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
+=======
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+>>>>>>> getbyid
     "license": "MIT",
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
+<<<<<<< HEAD
         "laravel/framework": "^10.10",
+=======
+        "laravel/framework": "^10.0",
+>>>>>>> getbyid
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8"
     },
@@ -17,7 +26,11 @@
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
+<<<<<<< HEAD
         "phpunit/phpunit": "^10.1",
+=======
+        "phpunit/phpunit": "^10.0",
+>>>>>>> getbyid
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -48,6 +61,12 @@
         ]
     },
     "extra": {
+<<<<<<< HEAD
+=======
+        "branch-alias": {
+            "dev-master": "10.x-dev"
+        },
+>>>>>>> getbyid
         "laravel": {
             "dont-discover": []
         }
@@ -57,8 +76,12 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+<<<<<<< HEAD
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+=======
+            "pestphp/pest-plugin": true
+>>>>>>> getbyid
         }
     },
     "minimum-stability": "stable",

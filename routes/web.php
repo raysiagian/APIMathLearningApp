@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+<<<<<<< HEAD
 
 // Route::get('/resources/app/uploads/{filename}', function($filename){
 //     $path = resource_path() . '/app/uploads/' . $filename;
@@ -32,3 +33,5 @@ Route::get('/', function () {
 
 //     return $response;
 // });
+=======
+>>>>>>> getbyid

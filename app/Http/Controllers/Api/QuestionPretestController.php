@@ -11,11 +11,18 @@ class QuestionPretestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data pertanyaan pretest
-        $questions = QuestionPretest::all();
+        // Mendapatkan id_materi dari query parameter
+        $id_pretest = $request->query('id_pretest');
 
+        $query = QuestionPretest::query();
+
+        if ($id_pretest) {
+            $query->where('id_pretest', $id_pretest);
+        }
+
+        $questions = $query->get();
         // Mengembalikan data pertanyaan pretest sebagai respons JSON
         return response()->json(['data' => $questions]);
     }
@@ -33,10 +40,19 @@ class QuestionPretestController extends Controller
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
         // Membuat record baru dalam database
-        $question = QuestionPretest::create($request->all());
+        $question = QuestionPretest::create([
+            'id_pretest' => $request->id_pretest,
+            'question' => $request->question,
+            'option_1' => $request->option_1,
+            'option_2' => $request->option_2,
+            'option_3' => $request->option_3,
+            'option_4' => $request->option_4,
+            'correct_index' => $request->correct_index,
+        ]);
 
         // Mengembalikan pertanyaan pretest yang baru dibuat sebagai respons JSON
         return response()->json(['message' => 'Question created successfully', 'data' => $question], 201);
@@ -45,18 +61,12 @@ class QuestionPretestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         // Mengambil data pertanyaan pretest berdasarkan ID
-        $question = QuestionPretest::find($id);
+        $question = QuestionPretest::findOrFail($id);
 
-        // Jika pertanyaan pretest ditemukan, kembalikan sebagai respons JSON
-        if ($question) {
-            return response()->json(['data' => $question]);
-        }
-
-        // Jika pertanyaan pretest tidak ditemukan, kembalikan pesan error
-        return response()->json(['message' => 'Question not found'], 404);
+        return response()->json((['data' => $question]));
     }
 
     /**
@@ -72,6 +82,7 @@ class QuestionPretestController extends Controller
             'option_2' => 'required|string',
             'option_3' => 'required|string',
             'option_4' => 'required|string',
+            'correct_index' => 'required|string',
         ]);
 
         // Mengambil data pertanyaan pretest berdasarkan ID
@@ -79,7 +90,15 @@ class QuestionPretestController extends Controller
 
         // Jika pertanyaan pretest ditemukan, update data
         if ($question) {
-            $question->update($request->all());
+            $question->id_pretest = $request->id_pretest;
+            $question->question = $request->question;
+            $question->option_1 = $request->option_1;
+            $question->option_2 = $request->option_2;
+            $question->option_3 = $request->option_3;
+            $question->option_4 = $request->option_4;
+            $question->correct_index = $request->correct_index;
+
+            $question->save();
 
             // Mengembalikan pertanyaan pretest yang telah diperbarui sebagai respons JSON
             return response()->json(['message' => 'Question updated successfully', 'data' => $question]);

@@ -10,12 +10,13 @@ class Posttest extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_posttest';
-    protected $table = 'pretest';
+    protected $table = 'posttest';
 
 
     protected $fillable = [
-        'id_level',
-        'score_pretest',
+        'id_unit',
+        // 'score_posttest',
+        'is_completed',
     ];
 
 

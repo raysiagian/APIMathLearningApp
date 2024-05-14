@@ -5,24 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pretest extends Model
+class Role extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_pretest';
-    protected $table = 'pretest';
-
+    protected $primaryKey = 'id_role'; 
+    protected $table = 'role';
 
     protected $fillable = [
-
-        'id_unit',
-        // 'score_pretest',
-        'is_completed',
+        'role_name',
     ];
 
-
     public $timestamps = false;
-
-
-
 }
