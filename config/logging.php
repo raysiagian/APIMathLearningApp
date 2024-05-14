@@ -3,10 +3,7 @@
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-<<<<<<< HEAD
-use Monolog\Processor\PsrLogMessageProcessor;
-=======
->>>>>>> getbyid
+
 
 return [
 
@@ -65,10 +62,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-<<<<<<< HEAD
-            'replace_placeholders' => true,
-=======
->>>>>>> getbyid
+
         ],
 
         'daily' => [
@@ -76,10 +70,6 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
-<<<<<<< HEAD
-            'replace_placeholders' => true,
-=======
->>>>>>> getbyid
         ],
 
         'slack' => [
@@ -88,10 +78,6 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => env('LOG_LEVEL', 'critical'),
-<<<<<<< HEAD
-            'replace_placeholders' => true,
-=======
->>>>>>> getbyid
         ],
 
         'papertrail' => [
@@ -103,10 +89,6 @@ return [
                 'port' => env('PAPERTRAIL_PORT'),
                 'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
             ],
-<<<<<<< HEAD
-            'processors' => [PsrLogMessageProcessor::class],
-=======
->>>>>>> getbyid
         ],
 
         'stderr' => [
@@ -117,29 +99,18 @@ return [
             'with' => [
                 'stream' => 'php://stderr',
             ],
-<<<<<<< HEAD
-            'processors' => [PsrLogMessageProcessor::class],
-=======
->>>>>>> getbyid
         ],
 
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
-<<<<<<< HEAD
-            'facility' => LOG_USER,
-            'replace_placeholders' => true,
-=======
->>>>>>> getbyid
+
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
-<<<<<<< HEAD
-            'replace_placeholders' => true,
-=======
->>>>>>> getbyid
+
         ],
 
         'null' => [

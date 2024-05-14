@@ -1,10 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
-<<<<<<< HEAD
-use Illuminate\Support\ServiceProvider;
-=======
->>>>>>> getbyid
+
 
 return [
 
@@ -60,11 +57,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-<<<<<<< HEAD
-    'asset_url' => env('ASSET_URL'),
-=======
+
     'asset_url' => env('ASSET_URL', '/'),
->>>>>>> getbyid
+
 
     /*
     |--------------------------------------------------------------------------
@@ -148,11 +143,8 @@ return [
 
     'maintenance' => [
         'driver' => 'file',
-<<<<<<< HEAD
-        // 'store' => 'redis',
-=======
+
         // 'store'  => 'redis',
->>>>>>> getbyid
     ],
 
     /*
@@ -166,9 +158,6 @@ return [
     |
     */
 
-<<<<<<< HEAD
-    'providers' => ServiceProvider::defaultProviders()->merge([
-=======
     'providers' => [
 
         /*
@@ -197,7 +186,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
->>>>>>> getbyid
+
         /*
          * Package Service Providers...
          */
@@ -210,12 +199,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-<<<<<<< HEAD
-    ])->toArray(),
-=======
+
 
     ],
->>>>>>> getbyid
+
 
     /*
     |--------------------------------------------------------------------------
@@ -229,11 +216,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-<<<<<<< HEAD
-        // 'Example' => App\Facades\Example::class,
-=======
+
         // 'ExampleClass' => App\Example\ExampleClass::class,
->>>>>>> getbyid
     ])->toArray(),
 
 ];
