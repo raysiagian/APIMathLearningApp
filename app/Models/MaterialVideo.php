@@ -17,6 +17,7 @@ class MaterialVideo extends Model
         'video_Url',
         'title',
         'explanation',
+        'is_completed',
     ];
 
     public $timestamps = false;

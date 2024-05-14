@@ -5,23 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pretest extends Model
+class ScorePosttest extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_pretest';
-    protected $table = 'pretest';
+    protected $table = 'score_posttest';
+    protected $primaryKey = 'id_ScorePosttest'; 
 
 
     protected $fillable = [
         'id_unit',
-        // 'score_pretest',
-        'is_completed',
+        'id_user',
+        'score',
+        'id_posttest',
     ];
 
-
     public $timestamps = false;
-
-
 
 }

@@ -15,9 +15,11 @@ use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\LevelBonusController;
 use App\Http\Controllers\Api\UnitBonusController;
 use App\Http\Controllers\Api\QuestionLevelBonusController;
+use App\Http\Controllers\Api\ScorePretestController;
+use App\Http\Controllers\Api\ScorePosttestController;
 use App\Http\Controllers\Api\SuperAdminAuthController;
 use App\Http\Middleware\RoleCheckMiddleware;
-use App\Http\Controllers\Api\ScoreUserController;
+use App\Http\Controllers\Api\ScoreController;
 
 
 /*
@@ -59,8 +61,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/username', [AuthController::class, 'getUsername']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Score
-    Route::get('/user/scores', [ScoreUserController::class, 'index']);
+    Route::get('/user/pretest-status', [PretestController::class, 'checkUserPretestStatus']);
+    Route::get('/user/posttest-status', [PosttestController::class, 'checkUserPosttestStatus']);
+    Route::get('/user/material-video-status', [MaterialVideoController::class, 'checkUserMaterialVideoStatus']);
+    Route::put('/pretest/{id}/update-final-score-pretest', [ScorePretestController::class, 'updateFinalScorePretest']);
+    Route::put('/posttest/{id}/update-final-score-posttest', [ScorePosttestController::class, 'updateFinalScorePosttest']);
+
+
 });
 
 
@@ -88,7 +95,10 @@ Route::get("getLevel",[LevelController::class, "index"]);
 // API Pretest
 Route::post("addPretest",[PretestController::class, "store"]);
 Route::get("getPretest",[PretestController::class, "index"]);
+// Route::put('/pretest/{id}/update-final-score', [PretestController::class, 'updateFinalScorePretest']);
 Route::put('/pretest/{id}/update-final-score', [PretestController::class, 'updateFinalScore']);
+
+Route::put('/pretest/{id}/mark-completed', [PretestController::class, 'markPretestCompleted']);
 
 Route::post("addLevelBonus",[LevelBonusController::class, "store"]);
 Route::get("getLevelBonus",[LevelBonusController::class, "index"]);
@@ -116,4 +126,9 @@ Route::get("getQuestionLevelBonus",[QuestionLevelBonusController::class, "index"
 // API Material Video
 Route::post("addMaterialVideo",[MaterialVideoController::class, "store"]);
 Route::get("getMaterialVideo",[MaterialVideoController::class, "index"]);
+
+//ScorePretest||Posttest
+Route::get('/scores', [ScoreController::class, 'index']);
+Route::get('/scores/{id}', [ScoreController::class, 'show']);
+
 

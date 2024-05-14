@@ -2,26 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ScoreUser extends Model
 {
-    use HasFactory;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'score_pretest';
 
-    protected $table = 'score_user';
-
-    protected $primaryKey = 'id_score_user';
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-        'id_user',
-        'id_pretest',
-        'id_posttest',
-        'id_level',
-        'id_unit',
-        'score_pretest',
-        'score_posttest',
-        'title',
+        'id_user', 'id_pretest', 'id_unit', 'score',
     ];
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

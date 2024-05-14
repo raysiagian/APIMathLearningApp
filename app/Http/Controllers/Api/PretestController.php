@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pretest;
+use Illuminate\Support\Facades\Auth;
 
 class PretestController extends Controller
 {
@@ -144,6 +145,45 @@ public function updateFinalScore(Request $request, $id)
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
+
+    public function checkUserPretestStatus()
+    {
+        // Mendapatkan pengguna yang sedang login
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Melakukan pengecekan apakah pengguna telah mengerjakan pretest atau tidak
+        $pretest = Pretest::where('id_unit', $user->id_unit)->first();
+
+        if ($pretest) {
+            return response()->json(['message' => 'User has completed the pretest'], 200);
+        } else {
+            return response()->json(['message' => 'User has not completed the pretest'], 404);
+        }
+    }
+
+    public function markPretestCompleted($id)
+    {
+        try {
+            $pretest = Pretest::find($id);
+    
+            if (!$pretest) {
+                return response()->json(['message' => 'Pretest not found for ID: ' . $id], 404);
+            }
+    
+            // Mengatur nilai is_completed menjadi true (1)
+            $pretest->is_completed = true;
+            $pretest->save(); // Simpan perubahan ke database
+    
+            return response()->json(['message' => 'Pretest marked as completed', 'data' => $pretest]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
 
 }
 
