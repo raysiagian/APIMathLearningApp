@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\UnitBonusController;
 use App\Http\Controllers\Api\QuestionLevelBonusController;
 use App\Http\Controllers\Api\ScorePretestController;
 use App\Http\Controllers\Api\ScorePosttestController;
+use App\Http\Controllers\Api\ScoreLevelBonusController;
 use App\Http\Controllers\Api\SuperAdminAuthController;
 use App\Http\Middleware\RoleCheckMiddleware;
 use App\Http\Controllers\Api\ScoreController;
@@ -66,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/material-video-status', [MaterialVideoController::class, 'checkUserMaterialVideoStatus']);
     Route::put('/pretest/{id}/update-final-score-pretest', [ScorePretestController::class, 'updateFinalScorePretest']);
     Route::put('/posttest/{id}/update-final-score-posttest', [ScorePosttestController::class, 'updateFinalScorePosttest']);
+    Route::put('/levelbonus/{id}/update-final-score-level-bonus', [ScoreLevelBonusController::class, 'updateFinalScoreLevelBonus']);
 
 
 });
