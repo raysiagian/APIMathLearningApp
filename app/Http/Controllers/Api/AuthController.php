@@ -134,5 +134,59 @@ class AuthController extends Controller
         return response()->json(['name' => $name], 200);
     }
     
+    // Decrease lives API
+    public function getLivesByUserId($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Asumsikan kolom `lives` menyimpan data dalam format JSON
+        $lives = json_decode($user->lives, true);
+
+        return response()->json([
+            'status' => true,
+            'lives' => $lives,
+        ]);
+    }
+
+    // Update lives by user ID API
+    public function updateLivesByUserId(Request $request, $id)
+    {
+        // Validasi permintaan
+        $validator = Validator::make($request->all(), [
+            'lives' => 'required|integer|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            throw ValidationException::withMessages($validator->errors()->toArray());
+        }
+
+        // Temukan pengguna berdasarkan ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Update jumlah nyawa
+        $user->lives = $request->lives;
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Jumlah nyawa berhasil diperbarui',
+            'user' => $user,
+        ]);
+    }
+
     
 }

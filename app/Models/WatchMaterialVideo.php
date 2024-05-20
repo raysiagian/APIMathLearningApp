@@ -5,23 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pretest extends Model
+class WatchMaterialVideo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_pretest';
-    protected $table = 'pretest';
+    protected $table = 'watch_material_video';
+    protected $primaryKey = 'id_WatchMaterialVideo';
 
-
+    
     protected $fillable = [
         'id_unit',
-        // 'score_pretest',
-        // 'is_completed',
+        'id_user',
+        'id_completed',
+        'id_material_video',
     ];
 
-
     public $timestamps = false;
-
-
 
 }
