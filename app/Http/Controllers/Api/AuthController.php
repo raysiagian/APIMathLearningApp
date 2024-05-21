@@ -40,23 +40,30 @@ class AuthController extends Controller
         {
             // Validasi permintaan
             $validatedData = $request->validated();
-        
+
             $user = User::where('email', $validatedData['email'])->first();
-        
+
             if (!$user || !Hash::check($validatedData['password'], $user->password)) {
                 return response()->json([
-                    'message' => 'Invalid credentials'
+                    'message' => 'Email atau password anda salah'
                 ], 422);
             }
-        
+
+            if ($user->is_active != 1) {
+                return response()->json([
+                    'message' => 'Akun anda tidak aktif'
+                ], 403);
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
-        
+
             return response()->json([
                 'user' => $user,
                 'token' => $token,
+                'is_active' => $user->is_active,  // Add is_active field to the response
             ], 200);
         }
-        
+
 
     // Check email availability API
     public function checkEmailAvailability(Request $request)
