@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MateriController;
@@ -18,6 +19,11 @@ use App\Http\Controllers\Api\QuestionLevelBonusController;
 use App\Http\Controllers\Api\ScorePretestController;
 use App\Http\Controllers\Api\ScorePosttestController;
 use App\Http\Controllers\Api\ScoreLevelBonusController;
+use App\Http\Controllers\Api\StatisticController;
+use App\Http\Controllers\Api\WatchMaterialVideoController;
+use App\Http\Controllers\Api\LencanaPenggunaController;
+use App\Http\Controllers\Api\BadgeController;
+use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\SuperAdminAuthController;
 use App\Http\Middleware\RoleCheckMiddleware;
 use App\Http\Controllers\Api\ScoreController;
@@ -60,16 +66,55 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/username', [AuthController::class, 'getUsername']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/edit-username', [AuthController::class, 'editUsername']);
 
     Route::get('/user/pretest-status', [PretestController::class, 'checkUserPretestStatus']);
     Route::get('/user/posttest-status', [PosttestController::class, 'checkUserPosttestStatus']);
     Route::get('/user/material-video-status', [MaterialVideoController::class, 'checkUserMaterialVideoStatus']);
     Route::put('/pretest/{id}/update-final-score-pretest', [ScorePretestController::class, 'updateFinalScorePretest']);
     Route::put('/posttest/{id}/update-final-score-posttest', [ScorePosttestController::class, 'updateFinalScorePosttest']);
+
     Route::put('/levelbonus/{id}/update-final-score-level-bonus', [ScoreLevelBonusController::class, 'updateFinalScoreLevelBonus']);
 
 
+    Route::get('/watch-material-video/status', [WatchMaterialVideoController::class, 'checkUserVideoStatus']);
+    Route::put('/watch-material-video/{id}/mark-completed', [WatchMaterialVideoController::class, 'markVideoCompleted']);
+    
+
+    Route::get('/user/score-pretest-by-idunit/{id_unit}', [ScorePretestController::class, 'getPretestByUnit']);
+    Route::get('/user/score-pretest-by-idunit-smallid/{id_unit}', [ScorePretestController::class, 'getPretestByUnitSmallIdScore']);
+    Route::get('/user/smallest-score-pretest-by-unit', [ScorePretestController::class, 'getSmallestScorePretestByUnit']);
+
+    Route::get('/user/get-scores-pretest', [ScorePretestController::class, 'getScoresPretest']);
+    Route::get('/user/get-scores-pretest-idmateri/{materiId}', [ScorePretestController::class, 'getScoresPretestByMateri']);
+
+
+
+
+
+
+    Route::get('/user/score-posttest-by-idunit/{id_unit}', [ScorePosttestController::class, 'getPosttestByUnit']);
+    Route::get('/user/score-posttest-by-idunit-smallid/{id_unit}', [ScorePosttestController::class, 'getPosttestByUnitSmallIdScore']);
+    Route::get('user/smallest-score-posttest-by-unit', [ScorePosttestController::class, 'getSmallestScorePosttestByUnit']);
+    Route::get('user/get-scores-posttest', [ScorePosttestController::class, 'getScoresPosttest']);
+    Route::get('/user/get-scores-posttest-idmateri/{materiId}', [ScorePosttestController::class, 'getScoresPosttestByMateri']);
+
+    Route::get('/user/watch-video-by-idunit/{id_unit}', [WatchMaterialVideoController::class, 'getWatchVideoByUnit']);
+    Route::get('/user/watch-video-by-idunit-smallid/{id_unit}', [WatchMaterialVideoController::class, 'getWatchVideoByUnitSmallIdVideo']);
+
+    Route::post('update-statistics', [StatisticController::class, 'updateStatistics']);
+    Route::get('statistics', [StatisticController::class, 'getStatistics']);
+
+
+
+
 });
+
+Route::get('/user/{id}/lives', [AuthController::class, 'getLivesByUserId']);
+Route::put('/users/{id}/update-lives',  [AuthController::class, 'updateLivesByUserId']);
+
+Route::post('forget-password', [AuthController::class, 'forgetPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 
 
@@ -101,7 +146,7 @@ Route::get("getPretest",[PretestController::class, "index"]);
 // Route::put('/pretest/{id}/update-final-score', [PretestController::class, 'updateFinalScorePretest']);
 Route::put('/pretest/{id}/update-final-score', [PretestController::class, 'updateFinalScore']);
 
-Route::put('/pretest/{id}/mark-completed', [PretestController::class, 'markPretestCompleted']);
+Route::get('/total-score-pretest-all-user', [ScorePretestController::class, 'getTotalPretestScoreForAllUsers']);
 
 Route::post("addLevelBonus",[LevelBonusController::class, "store"]);
 Route::get("getLevelBonus",[LevelBonusController::class, "index"]);
@@ -117,6 +162,10 @@ Route::get("getQuestionPretest",[QuestionPretestController::class, "index"]);
 Route::post("addPosttest",[PosttestController::class, "store"]);
 Route::get("getPosttest",[PosttestController::class, "index"]);
 Route::put('/posttest/{id}/update-final-score', [PosttestController::class, 'updateFinalScore']);
+
+Route::get('/total-score-posttest-all-user', [ScorePosttestController::class, 'getTotalPosttestScoreForAllUsers']);
+Route::get('/leaderboard-posttest-all-user', [ScorePosttestController::class, 'getLeaderboardScorePosttest']);
+
 
 
 // API QuestionPretest
@@ -137,3 +186,27 @@ Route::get('/scores', [ScoreController::class, 'index']);
 Route::get('/scores/{id}', [ScoreController::class, 'show']);
 
 
+// API untuk lencana
+Route::get('/badges', [BadgeController::class, 'index']);
+Route::get('/badges/{id}', [BadgeController::class, 'show']);
+Route::post('/addBadges', [BadgeController::class, 'store']);
+Route::post('/badges/{id}', [BadgeController::class, 'update']);
+Route::delete('/badges/{id}', [BadgeController::class, 'destroy']);
+Route::get('/badges/by-posttest/{id_posttest}', [BadgeController::class, 'getByPosttestId']);
+Route::get('/images/{filename}', function ($filename) {
+    $path = storage_path('images/' . $filename); 
+    if (!file_exists($path)) {
+        return Response::json(['error' => 'File not found'], 404); 
+    }
+
+    // Jika file gambar ada, kembalikan respons dengan file gambar
+    return response()->file($path);
+})->name('image');
+
+//lencanaPengguna
+Route::get('/lencanaPengguna', [LencanaPenggunaController::class, 'index']);
+Route::get('/lencana-pengguna/{id_user}', [LencanaPenggunaController::class, 'index']);
+Route::post('/addLencanaPengguna', [LencanaPenggunaController::class, 'store']);
+Route::get('/total-badge-user', [LencanaPenggunaController::class, 'getTotalBadgesUser']);
+
+Route::get('/leaderboard', [LeaderboardController::class, 'dataLeaderboard']);

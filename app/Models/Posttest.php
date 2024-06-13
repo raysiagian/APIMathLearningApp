@@ -16,7 +16,7 @@ class Posttest extends Model
     protected $fillable = [
         'id_unit',
         // 'score_posttest',
-        'is_completed',
+        // 'is_completed',
     ];
 
 

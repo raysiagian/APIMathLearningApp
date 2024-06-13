@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthController extends Controller
 {
@@ -40,23 +42,30 @@ class AuthController extends Controller
         {
             // Validasi permintaan
             $validatedData = $request->validated();
-        
+
             $user = User::where('email', $validatedData['email'])->first();
-        
+
             if (!$user || !Hash::check($validatedData['password'], $user->password)) {
                 return response()->json([
-                    'message' => 'Invalid credentials'
+                    'message' => 'Email atau password anda salah'
                 ], 422);
             }
-        
+
+            if ($user->is_active != 1) {
+                return response()->json([
+                    'message' => 'Akun anda tidak aktif'
+                ], 403);
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
-        
+
             return response()->json([
                 'user' => $user,
                 'token' => $token,
+                'is_active' => $user->is_active,  // Add is_active field to the response
             ], 200);
         }
-        
+
 
     // Check email availability API
     public function checkEmailAvailability(Request $request)
@@ -134,5 +143,180 @@ class AuthController extends Controller
         return response()->json(['name' => $name], 200);
     }
     
-    
+    // Decrease lives API
+    public function getLivesByUserId($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Asumsikan kolom `lives` menyimpan data dalam format JSON
+        $lives = json_decode($user->lives, true);
+
+        return response()->json([
+            'status' => true,
+            'lives' => $lives,
+        ]);
+    }
+
+    // Update lives by user ID API
+    public function updateLivesByUserId(Request $request, $id)
+    {
+        // Validasi permintaan
+        $validator = Validator::make($request->all(), [
+            'lives' => 'required|integer|min:0',
+        ]);
+
+        if ($validator->fails()) {  
+            throw ValidationException::withMessages($validator->errors()->toArray());
+        }
+
+        // Temukan pengguna berdasarkan ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Update jumlah nyawa
+        $user->lives = $request->lives;
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Jumlah nyawa berhasil diperbarui',
+            'user' => $user,
+        ]);
+    }
+
+    public function editUsername(Request $request)
+    {
+        // Mendapatkan ID pengguna yang sedang login
+        $userId = Auth::id();
+
+        // Jika ID pengguna tidak ditemukan
+        if (!$userId) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Pengguna tidak ditemukan',
+            ], 404);
+        }
+
+        // Mendapatkan objek pengguna berdasarkan ID
+        $user = User::find($userId);
+
+        // Validasi permintaan
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Perbarui nama pengguna
+        $user->name = $request->name;
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Username berhasil diperbarui',
+            'user' => $user,
+        ], 200);
+    }
+
+    public function forgetPassword(Request $request)
+    {
+        // Validasi permintaan
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $email = $request->email;
+        $name = $request->name;
+
+        // Periksa apakah email cocok dengan data yang ada di database
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email tidak terdaftar',
+            ], 404);
+        }
+
+        // Periksa apakah nama sesuai dengan nama pada data pengguna
+        if ($user->name !== $name) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Nama tidak sesuai dengan email yang diberikan',
+            ], 422);
+        }
+
+        // Jika cocok, kirim respons berhasil
+        return response()->json([
+            'status' => true,
+            'message' => 'Email dan nama cocok',
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        // Validasi permintaan
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $email = $request->email;
+        $password = $request->password;
+
+        // Periksa apakah email cocok dengan data yang ada di database
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email tidak terdaftar',
+            ], 404);
+        }
+
+        // Reset password pengguna
+        $user->password = Hash::make($password);
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password berhasil direset',
+        ]);
+    }
 }

@@ -15,7 +15,7 @@ class LevelBonus extends Model
     protected $fillable = [
         'id_unit_Bonus',
         'level_number',
-        'score_bonus',
+        // 'score_bonus',
     ];
 
     public $timestamps = false;
