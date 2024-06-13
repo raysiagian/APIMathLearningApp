@@ -288,7 +288,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
+    
         // Jika validasi gagal
         if ($validator->fails()) {
             return response()->json([
@@ -296,27 +296,30 @@ class AuthController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
+        // Mendapatkan email dan password dari request
         $email = $request->email;
         $password = $request->password;
-
+    
         // Periksa apakah email cocok dengan data yang ada di database
         $user = User::where('email', $email)->first();
-
+    
+        // Jika email tidak terdaftar
         if (!$user) {
             return response()->json([
                 'status' => false,
                 'message' => 'Email tidak terdaftar',
             ], 404);
         }
-
+    
         // Reset password pengguna
         $user->password = Hash::make($password);
         $user->save();
-
+    
         return response()->json([
             'status' => true,
             'message' => 'Password berhasil direset',
         ]);
     }
+    
 }
