@@ -65,7 +65,7 @@ class LencanaPenggunaController extends Controller
             $totalBadges = $badges->groupBy(['id_user', 'id_badge'])->map(function ($userBadges) {
                 return $userBadges->count();
             });
-    
+            
             return response()->json(['total_badges' => $totalBadges]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

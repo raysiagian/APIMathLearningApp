@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/username', [AuthController::class, 'getUsername']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/edit-username', [AuthController::class, 'editUsername']);
 
     Route::get('/user/pretest-status', [PretestController::class, 'checkUserPretestStatus']);
     Route::get('/user/posttest-status', [PosttestController::class, 'checkUserPosttestStatus']);
@@ -112,6 +113,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/user/{id}/lives', [AuthController::class, 'getLivesByUserId']);
 Route::put('/users/{id}/update-lives',  [AuthController::class, 'updateLivesByUserId']);
+
+Route::post('forget-password', [AuthController::class, 'forgetPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 
 

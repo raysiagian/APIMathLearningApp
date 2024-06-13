@@ -11,12 +11,20 @@ class QuestionLevelBonusController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Mengambil semua data pertanyaan level_bonus
-        $questions = QuestionLevelBonus::all();
+        $id_level_bonus = $request->query('id_level_bonus');
 
-        // Mengembalikan data pertanyaan level_bonus sebagai respons JSON
+        $query = QuestionLevelBonus::query();
+
+        if ($id_level_bonus) {
+            $query->where('id_level_bonus', $id_level_bonus); 
+        }
+
+        $questions = $query->get();
+
+        // Mengembalikan data pertanyaan pretest sebagai respons JSON
         return response()->json(['data' => $questions]);
     }
 

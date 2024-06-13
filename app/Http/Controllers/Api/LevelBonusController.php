@@ -29,7 +29,7 @@ class LevelBonusController extends Controller
         $request->validate([
             'id_unit_Bonus' => 'required|exists:unit_bonus,id_unit_Bonus',
             'level_number' => 'required|integer',
-            'score_bonus' => 'nullable|integer',
+            // 'score_bonus' => 'nullable|integer',
         ]);
 
         // Membuat record baru dalam database
